@@ -63,7 +63,7 @@ python scripts/new_note.py --section python --slug python-exceptions --title "Py
 ## 部署到 GitHub Pages
 
 1. 在 GitHub 创建一个独立仓库（例如 `python-learning-notes`）；若使用 GitHub Free 的 Pages 托管，仓库设为 Public。
-2. 上传本工程文件（或通过 ChatGPT 已连接的 GitHub 仓库操作写入）。
+2. 将本工程源文件提交到独立的 GitHub 仓库。
 3. 在仓库 `Settings → Pages → Build and deployment → Source` 选择 `GitHub Actions`。
 4. 每次推送到 `main`，工作流会运行例子验证、生成图鉴、构建站点并自动发布。
 
