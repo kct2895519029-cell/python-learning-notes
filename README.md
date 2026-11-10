@@ -2,6 +2,17 @@
 
 可长期维护的静态学习网站：MkDocs Material + 结构化 Python 方法图鉴 + Markdown 笔记 + GitHub Pages。
 
+## 网站入口（GitHub Pages）
+
+**学习网站入口：**
+
+- [打开学习网站首页](https://kct2895519029-cell.github.io/python-learning-notes/)
+- [打开 AI 应用开发学习专区](https://kct2895519029-cell.github.io/python-learning-notes/ai/)（目前为待补充的课程目录）
+- [打开 Python 四大容器交互式方法图鉴](https://kct2895519029-cell.github.io/python-learning-notes/tools/containers.html)
+- [查看网站部署状态（GitHub Actions）](https://github.com/kct2895519029-cell/python-learning-notes/actions)
+
+**注意：** 当前 GitHub 的 `Code` 页面显示源代码；上面的 `github.io` 链接才是网站页面。网站由 GitHub Actions 从 `docs/` 下的 Markdown 文件构建并发布，**不必**在 `main` 分支中找到与网站页面地址同名的文件。
+
 ## 文件结构
 
 ```text
