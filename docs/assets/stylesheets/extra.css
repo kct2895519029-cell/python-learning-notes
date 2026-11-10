@@ -1,0 +1,10 @@
+:root { --md-primary-fg-color: #344dab; --md-accent-fg-color: #009c89; }
+.md-typeset h1 { font-weight: 760; letter-spacing: -.02em; }
+.md-typeset h2 { font-weight: 680; }
+.kb-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; margin:20px 0; }
+.kb-card { display:block; color:inherit !important; text-decoration:none !important; padding:20px;
+  border:1px solid var(--md-default-fg-color--lightest); border-radius:15px;
+  background: var(--md-code-bg-color); transition: transform .15s,box-shadow .15s; }
+.kb-card:hover { transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,.07); }
+.kb-card strong { display:block; font-size:1.03rem; }
+.kb-card small { display:block; margin-top:10px; color:var(--md-default-fg-color--light); }

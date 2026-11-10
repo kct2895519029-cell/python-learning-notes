@@ -1,0 +1,1818 @@
+[
+  {
+    "id": "list.append",
+    "cat": "list",
+    "name": "append",
+    "sig": "a.append(item)",
+    "desc": "在列表末尾添加一个元素；传入的对象整体作为一个元素。",
+    "params": [
+      {
+        "name": "item",
+        "type": "任意对象",
+        "desc": "要追加的单个元素；即使传入列表，也不会拆开。"
+      }
+    ],
+    "ret": "None（空值）",
+    "cost": "均摊 O(1)",
+    "why": "动态数组通常预留容量；容量耗尽扩容时单次可能 O(n)。",
+    "mutate": "是：原列表长度增加。",
+    "pitfalls": [
+      "append([3, 4]) 会把 [3, 4] 作为一个嵌套元素。",
+      "不要写 b = a.append(3)：b 会是 None。"
+    ],
+    "code": "a = [1, 2]\na.append(3)\nprint(a)\nprint(a.append([4, 5]))\nprint(a)",
+    "output": "[1, 2, 3]\nNone\n[1, 2, 3, [4, 5]]",
+    "steps": [
+      "a 初始保存两个元素 1、2。",
+      "append(3) 在末尾写入一个整数。",
+      "append([4, 5]) 会追加完整子列表；返回值是 None。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "2"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "2",
+        "3",
+        "[4, 5]"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "diagram_note": "右侧新增两个位置，其中最后一个位置是一个完整的子列表。",
+    "related": [
+      "list.extend",
+      "list.insert"
+    ],
+    "label": "在列表末尾添加一个元素；传入的对象整体作为一个元素。"
+  },
+  {
+    "id": "list.extend",
+    "cat": "list",
+    "name": "extend",
+    "sig": "a.extend(iterable)",
+    "desc": "遍历可迭代对象，把其中元素逐个添加到列表末尾。",
+    "params": [
+      {
+        "name": "iterable",
+        "type": "可迭代对象",
+        "desc": "如列表、元组、字符串、生成器；每次迭代取一个元素。"
+      }
+    ],
+    "ret": "None",
+    "cost": "O(k)，k 为实际追加的元素数",
+    "why": "需要逐个取得并放入 k 个元素；扩容成本均摊。",
+    "mutate": "是：原列表被扩展。",
+    "pitfalls": [
+      "extend(\"ab\") 添加的是 \"a\" 和 \"b\" 两个字符。",
+      "不能传入不可迭代的整数，如 extend(3)。"
+    ],
+    "code": "a = [1, 2]\na.extend([3, 4])\nprint(a)\na.extend(\"AB\")\nprint(a)",
+    "output": "[1, 2, 3, 4]\n[1, 2, 3, 4, 'A', 'B']",
+    "steps": [
+      "原列表为 [1, 2]。",
+      "extend([3, 4]) 逐一追加 3 和 4。",
+      "字符串也可迭代，因此 \"AB\" 被分成两个字符。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "2"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "A",
+        "B"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "diagram_note": "和 append 不同：右侧增加的是多个独立元素。",
+    "related": [
+      "list.append"
+    ],
+    "label": "遍历可迭代对象"
+  },
+  {
+    "id": "list.insert",
+    "cat": "list",
+    "name": "insert",
+    "sig": "a.insert(index, item)",
+    "desc": "把元素插入指定位置，后面的元素向右移动。",
+    "params": [
+      {
+        "name": "index",
+        "type": "整数索引",
+        "desc": "插入到该索引所指元素之前；负索引从后往前定位。"
+      },
+      {
+        "name": "item",
+        "type": "任意对象",
+        "desc": "要插入的单个对象。"
+      }
+    ],
+    "ret": "None",
+    "cost": "O(n)，头部最贵",
+    "why": "插入位置后方约有 n-index 个元素需要移动。",
+    "mutate": "是。",
+    "pitfalls": [
+      "index 大于长度时放在尾部；负值过小时放在头部，不抛出越界错误。",
+      "频繁头插可考虑 collections.deque 的 appendleft。"
+    ],
+    "code": "a = [10, 30]\na.insert(1, 20)\nprint(a)\na.insert(999, 40)\nprint(a)",
+    "output": "[10, 20, 30]\n[10, 20, 30, 40]",
+    "steps": [
+      "先把 20 插到索引 1（原 30 之前）。",
+      "后面的元素整体右移。",
+      "索引 999 超出末尾，插到尾部。"
+    ],
+    "before": {
+      "cells": [
+        "10",
+        "30"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "10",
+        "20",
+        "30",
+        "40"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "diagram_note": "索引指的是“放到当前位置元素前面”，而不是替换原元素。",
+    "related": [
+      "list.append",
+      "list.pop"
+    ],
+    "label": "把元素插入指定位置"
+  },
+  {
+    "id": "list.pop",
+    "cat": "list",
+    "name": "pop",
+    "sig": "a.pop(index=-1)",
+    "desc": "删除指定索引的元素，并把它作为返回值交给调用方。",
+    "params": [
+      {
+        "name": "index",
+        "type": "整数，可选；默认 -1",
+        "desc": "省略时删除末尾；0 表示第一个元素。"
+      }
+    ],
+    "ret": "被删除的元素",
+    "cost": "尾部均摊 O(1)；其他位置 O(n)",
+    "why": "从中间删除需要左移后续元素。",
+    "mutate": "是：删除一个元素。",
+    "pitfalls": [
+      "空列表 pop() 或越界索引都会抛 IndexError。",
+      "pop 是按位置删除，remove 是按值删除。"
+    ],
+    "code": "a = [10, 20, 30]\nx = a.pop(1)\nprint(x)\nprint(a)\nprint(a.pop())\nprint(a)",
+    "output": "20\n[10, 30]\n30\n[10]",
+    "steps": [
+      "pop(1) 读取并删除索引 1 的 20。",
+      "x 接住删除的值 20。",
+      "第二次 pop() 默认删除末尾 30。"
+    ],
+    "before": {
+      "cells": [
+        "10",
+        "20",
+        "30"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "10"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "diagram_note": "先删索引 1 的 20，再删尾部的 30；删除值可以保存到变量。",
+    "related": [
+      "list.remove",
+      "dict.pop",
+      "set.pop"
+    ],
+    "label": "删除指定索引的元素"
+  },
+  {
+    "id": "list.remove",
+    "cat": "list",
+    "name": "remove",
+    "sig": "a.remove(value)",
+    "desc": "查找并删除首个与 value 相等的元素。",
+    "params": [
+      {
+        "name": "value",
+        "type": "任意可比较对象",
+        "desc": "用相等比较（==）寻找第一次出现的位置。"
+      }
+    ],
+    "ret": "None",
+    "cost": "O(n)",
+    "why": "最坏需要线性扫描整个列表，删除后还可能移动元素。",
+    "mutate": "是。",
+    "pitfalls": [
+      "未找到值抛 ValueError。",
+      "只删除第一个，不删除所有重复值。",
+      "遍历原列表时直接 remove 易跳过相邻元素。"
+    ],
+    "code": "a = [2, 3, 2, 4]\na.remove(2)\nprint(a)",
+    "output": "[3, 2, 4]",
+    "steps": [
+      "从左往右比较元素是否等于 2。",
+      "第一个位置匹配，删除该元素。",
+      "后面仍保留第二个 2。"
+    ],
+    "before": {
+      "cells": [
+        "2",
+        "3",
+        "2",
+        "4"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "3",
+        "2",
+        "4"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "diagram_note": "删除的是第一个值为 2 的元素，而不是索引 2。",
+    "related": [
+      "list.pop",
+      "set.remove"
+    ],
+    "label": "查找并删除首个与 value 相等的元素。"
+  },
+  {
+    "id": "list.index",
+    "cat": "list",
+    "name": "index",
+    "sig": "a.index(value, start=0, stop=len(a))",
+    "desc": "在指定查找区间内返回第一个匹配值的索引。",
+    "params": [
+      {
+        "name": "value",
+        "type": "任意可比较对象",
+        "desc": "目标值，使用 == 比较。"
+      },
+      {
+        "name": "start",
+        "type": "整数，可选；默认 0",
+        "desc": "搜索起点，包含本位置。"
+      },
+      {
+        "name": "stop",
+        "type": "整数，可选；默认列表长度",
+        "desc": "搜索终点，不包含本位置。"
+      }
+    ],
+    "ret": "整数索引",
+    "cost": "O(n)",
+    "why": "线性扫描查找范围。",
+    "mutate": "否。",
+    "pitfalls": [
+      "未找到时抛 ValueError。",
+      "区间是 [start, stop)，不含 stop。",
+      "先用 in 再 index 会重复查找；不确定时可用 try/except。"
+    ],
+    "code": "a = [\"a\", \"b\", \"a\"]\nprint(a.index(\"a\"))\nprint(a.index(\"a\", 1))",
+    "output": "0\n2",
+    "steps": [
+      "第一次从索引 0 开始找，返回 0。",
+      "第二次从索引 1 开始找。",
+      "索引 2 是下一次出现 \"a\" 的位置。"
+    ],
+    "before": {
+      "cells": [
+        "0:a",
+        "1:b",
+        "2:a"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "0",
+        "2"
+      ],
+      "kind": "tokens",
+      "heading": "输出索引"
+    },
+    "diagram_note": "第一个查找结果是索引 0；改变 start 后结果是索引 2。",
+    "related": [
+      "list.count",
+      "tuple.index"
+    ],
+    "label": "在指定查找区间内返回第一个匹配值的索引。"
+  },
+  {
+    "id": "list.count",
+    "cat": "list",
+    "name": "count",
+    "sig": "a.count(value)",
+    "desc": "统计列表中与目标值相等的元素出现次数。",
+    "params": [
+      {
+        "name": "value",
+        "type": "任意可比较对象",
+        "desc": "用 == 逐一比较，不要求类型完全一致。"
+      }
+    ],
+    "ret": "整数（次数）",
+    "cost": "O(n)",
+    "why": "必须遍历所有元素计数。",
+    "mutate": "否。",
+    "pitfalls": [
+      "1 == 1.0 == True 为真，统计并不按“同类型”严格匹配。",
+      "复杂对象的 == 可能比较昂贵。"
+    ],
+    "code": "a = [1, True, 1.0, 2]\nprint(a.count(1))",
+    "output": "3",
+    "steps": [
+      "count(1) 逐个执行相等比较。",
+      "1、True、1.0 都满足 == 1。",
+      "因此总次数为 3。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "True",
+        "1.0",
+        "2"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "True",
+        "1.0"
+      ],
+      "kind": "tokens",
+      "heading": "匹配项"
+    },
+    "diagram_note": "这里只统计与 1 相等的三个元素，不要求类型相同。",
+    "related": [
+      "tuple.count",
+      "list.index"
+    ],
+    "label": "统计列表中与目标值相等的元素出现次数。"
+  },
+  {
+    "id": "list.sort",
+    "cat": "list",
+    "name": "sort",
+    "sig": "a.sort(key=None, reverse=False)",
+    "desc": "在原列表上排序，支持自定义排序依据和升降序。",
+    "params": [
+      {
+        "name": "key",
+        "type": "函数或 None",
+        "desc": "元素映射到比较键；如 abs、str.lower。"
+      },
+      {
+        "name": "reverse",
+        "type": "布尔值；默认 False",
+        "desc": "True 为降序，False 为升序；只允许按关键字传参。"
+      }
+    ],
+    "ret": "None",
+    "cost": "最坏/平均 O(n log n)，近乎有序可 O(n)",
+    "why": "CPython 使用稳定自适应排序（Timsort 体系）；计算 key 的成本另计。",
+    "mutate": "是：元素原地重排。",
+    "pitfalls": [
+      "sort() 返回 None，不是排序后的列表。",
+      "混合类型不必然报错：只要排序键可比较即可。",
+      "排序是稳定的：相同 key 的原有顺序保持不变。"
+    ],
+    "code": "a = [-5, 2, -1, 3]\na.sort(key=abs, reverse=True)\nprint(a)",
+    "output": "[-5, 3, 2, -1]",
+    "steps": [
+      "key=abs 取绝对值作比较依据：5、2、1、3。",
+      "reverse=True 使比较依据从大到小。",
+      "原列表元素被重排为 [-5, 3, 2, -1]。"
+    ],
+    "before": {
+      "cells": [
+        "-5",
+        "2",
+        "-1",
+        "3"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "-5",
+        "3",
+        "2",
+        "-1"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "diagram_note": "排序依据为绝对值，并非按数字的正负值直接排列。",
+    "related": [
+      "list.reverse"
+    ],
+    "label": "在原列表上排序"
+  },
+  {
+    "id": "list.reverse",
+    "cat": "list",
+    "name": "reverse",
+    "sig": "a.reverse()",
+    "desc": "不比较元素大小，直接把当前顺序反过来。",
+    "params": [],
+    "ret": "None",
+    "cost": "O(n)",
+    "why": "把头尾元素交换，逐步向中间推进。",
+    "mutate": "是。",
+    "pitfalls": [
+      "reverse() 不是按值大小排序。",
+      "和 reversed(a) 不同：后者返回反向迭代器，不修改 a。"
+    ],
+    "code": "a = [3, 1, 2]\na.reverse()\nprint(a)",
+    "output": "[2, 1, 3]",
+    "steps": [
+      "最左边 3 与最右边 2 交换。",
+      "中间 1 的位置不变。",
+      "最终仅翻转顺序为 [2, 1, 3]。"
+    ],
+    "before": {
+      "cells": [
+        "3",
+        "1",
+        "2"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "2",
+        "1",
+        "3"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "diagram_note": "顺序完全倒转，但不会自动变成升序。",
+    "related": [
+      "list.sort"
+    ],
+    "label": "不比较元素大小"
+  },
+  {
+    "id": "list.clear",
+    "cat": "list",
+    "name": "clear",
+    "sig": "a.clear()",
+    "desc": "原地删除列表中的全部元素。",
+    "params": [],
+    "ret": "None",
+    "cost": "O(n)",
+    "why": "需要逐个解除对原元素的引用；释放内存成本视对象而定。",
+    "mutate": "是：列表变空。",
+    "pitfalls": [
+      "其他变量若引用的是同一个列表，也会看到空列表。",
+      "a = [] 只重新绑定变量 a，不会清空别名所指旧列表。"
+    ],
+    "code": "a = [1, 2]\nb = a\na.clear()\nprint(a)\nprint(b)",
+    "output": "[]\n[]",
+    "steps": [
+      "b = a 表示两个变量指向同一个列表对象。",
+      "clear() 修改这个共同对象。",
+      "因此 a 与 b 读到的都是空列表。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "2"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [],
+      "kind": "list",
+      "heading": ""
+    },
+    "diagram_note": "同一个列表对象被清空，所有指向它的变量都观察到修改。",
+    "related": [
+      "list.copy",
+      "dict.clear"
+    ],
+    "label": "原地删除列表中的全部元素。"
+  },
+  {
+    "id": "list.copy",
+    "cat": "list",
+    "name": "copy",
+    "sig": "b = a.copy()",
+    "desc": "创建一个新列表，但内部元素的引用只复制一层。",
+    "params": [],
+    "ret": "新列表对象",
+    "cost": "O(n)",
+    "why": "必须复制 n 个元素槽位及其对象引用。",
+    "mutate": "否：a 未改动（但随后修改共享子对象会互相可见）。",
+    "pitfalls": [
+      "浅拷贝不复制嵌套列表、字典。",
+      "b[0].append(...) 会改变两份列表共享的内部列表。",
+      "若需要深层独立，请研究 copy.deepcopy。"
+    ],
+    "code": "a = [[1], [2]]\nb = a.copy()\nb[0].append(9)\nprint(a)\nprint(b)\nprint(a is b)",
+    "output": "[[1, 9], [2]]\n[[1, 9], [2]]\nFalse",
+    "steps": [
+      "b 是新建的外层列表，所以 a is b 为 False。",
+      "b[0] 与 a[0] 仍指向同一个子列表。",
+      "对子列表追加 9，两边都能观察到。"
+    ],
+    "before": {
+      "cells": [
+        "[1]",
+        "[2]"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "[1, 9]",
+        "[2]"
+      ],
+      "kind": "list",
+      "heading": ""
+    },
+    "diagram_note": "外层列表不同，但第一个子列表是共享对象。",
+    "related": [
+      "dict.copy",
+      "set.copy"
+    ],
+    "label": "创建一个新列表"
+  },
+  {
+    "id": "dict.keys",
+    "cat": "dict",
+    "name": "keys",
+    "sig": "d.keys()",
+    "desc": "返回键的动态视图：可以遍历所有键，随字典内容变化。",
+    "params": [],
+    "ret": "dict_keys 视图",
+    "cost": "O(1) 创建视图；遍历 O(n)",
+    "why": "只构造一个轻量视图对象，没有复制所有键。",
+    "mutate": "否；修改字典会反映在视图中。",
+    "pitfalls": [
+      "视图不是普通列表，不能使用 v[0] 直接索引。",
+      "遍历期间增删键，通常会引发 RuntimeError，不要依赖可继续遍历。"
+    ],
+    "code": "d = {\"a\": 1}\nv = d.keys()\nd[\"b\"] = 2\nprint(list(v))",
+    "output": "['a', 'b']",
+    "steps": [
+      "keys() 获取与 d 关联的视图 v。",
+      "随后给 d 增加键 b。",
+      "list(v) 此时读到 a 和 b 两个键。"
+    ],
+    "before": {
+      "cells": [
+        "a → 1"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "a → 1",
+        "b → 2"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "diagram_note": "视图 v 是实时窗口，不是调用瞬间的快照。",
+    "related": [
+      "dict.values",
+      "dict.items"
+    ],
+    "label": "返回键的动态视图：可以遍历所有键"
+  },
+  {
+    "id": "dict.values",
+    "cat": "dict",
+    "name": "values",
+    "sig": "d.values()",
+    "desc": "返回值的动态视图，按字典的插入顺序遍历值。",
+    "params": [],
+    "ret": "dict_values 视图",
+    "cost": "O(1) 创建；遍历 O(n)",
+    "why": "视图没有立即复制每个值。",
+    "mutate": "否。",
+    "pitfalls": [
+      "值视图不可通过下标取第一个值。",
+      "values() 的两个视图相互比较，即使来自同一字典通常也不相等。"
+    ],
+    "code": "d = {\"a\": 1}\nv = d.values()\nd[\"b\"] = 2\nprint(list(v))",
+    "output": "[1, 2]",
+    "steps": [
+      "获取动态值视图 v。",
+      "新增键 b 对应值 2。",
+      "从 v 读取时看到 1、2。"
+    ],
+    "before": {
+      "cells": [
+        "a → 1"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "a → 1",
+        "b → 2"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "diagram_note": "增加了新的键值对，值视图也同步反映。",
+    "related": [
+      "dict.keys",
+      "dict.items"
+    ],
+    "label": "返回值的动态视图"
+  },
+  {
+    "id": "dict.items",
+    "cat": "dict",
+    "name": "items",
+    "sig": "d.items()",
+    "desc": "返回键值对的动态视图，迭代得到 (key, value) 元组。",
+    "params": [],
+    "ret": "dict_items 视图",
+    "cost": "O(1) 创建；遍历 O(n)",
+    "why": "只构造视图；每次迭代产生对应键值对。",
+    "mutate": "否。",
+    "pitfalls": [
+      "for key, value in d.items() 是最常见的解包形式。",
+      "迭代期间改变字典大小会有风险。"
+    ],
+    "code": "d = {\"name\": \"Li\", \"age\": 20}\nfor key, value in d.items():\n    print(key, value)",
+    "output": "name Li\nage 20",
+    "steps": [
+      "items() 在循环中依次提供 (键, 值) 二元组。",
+      "for key, value 把二元组拆给两个变量。",
+      "打印每组键和值。"
+    ],
+    "before": {
+      "cells": [
+        "name → Li",
+        "age → 20"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "(name, Li)",
+        "(age, 20)"
+      ],
+      "kind": "tokens",
+      "heading": "迭代出来的元素"
+    },
+    "diagram_note": "每次取出一个二元组，再分别赋给 key 和 value。",
+    "related": [
+      "dict.keys",
+      "dict.values"
+    ],
+    "label": "返回键值对的动态视图"
+  },
+  {
+    "id": "dict.get",
+    "cat": "dict",
+    "name": "get",
+    "sig": "d.get(key, default=None)",
+    "desc": "按键读取值；键不存在时返回默认值，不抛 KeyError。",
+    "params": [
+      {
+        "name": "key",
+        "type": "可哈希对象",
+        "desc": "要查找的键。"
+      },
+      {
+        "name": "default",
+        "type": "任意对象；默认 None",
+        "desc": "找不到键时直接返回此值；不会写入字典。"
+      }
+    ],
+    "ret": "对应的值；不存在则为 default",
+    "cost": "平均 O(1)",
+    "why": "使用哈希查找；极端冲突或昂贵的 hash/== 可能更慢。",
+    "mutate": "否。",
+    "pitfalls": [
+      "键存在但对应值为 None，与键不存在但默认 None 无法仅凭结果区分。",
+      "get 不会新增不存在的键。"
+    ],
+    "code": "d = {\"name\": \"Li\"}\nprint(d.get(\"name\"))\nprint(d.get(\"age\", 0))\nprint(d)",
+    "output": "Li\n0\n{'name': 'Li'}",
+    "steps": [
+      "查找 name，发现键存在，得到 Li。",
+      "查找 age，键不存在，返回提供的默认值 0。",
+      "字典没有出现新键 age。"
+    ],
+    "before": {
+      "cells": [
+        "name → Li"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "Li",
+        "0"
+      ],
+      "kind": "tokens",
+      "heading": "两次读取结果"
+    },
+    "diagram_note": "读取不会改变原字典。",
+    "related": [
+      "dict.setdefault",
+      "dict.pop"
+    ],
+    "label": "按键读取值；键不存在时返回默认值"
+  },
+  {
+    "id": "dict.pop",
+    "cat": "dict",
+    "name": "pop",
+    "sig": "d.pop(key, default=未提供)",
+    "desc": "按键删除字典中的一项，并返回对应的值。",
+    "params": [
+      {
+        "name": "key",
+        "type": "可哈希对象",
+        "desc": "待删除的键。"
+      },
+      {
+        "name": "default",
+        "type": "任意对象，可选",
+        "desc": "键不存在时返回它；若未提供则抛 KeyError。"
+      }
+    ],
+    "ret": "删除的值；或 default",
+    "cost": "平均 O(1)",
+    "why": "按哈希定位键值对。",
+    "mutate": "是。",
+    "pitfalls": [
+      "未提供 default 且键不存在，会抛 KeyError。",
+      "注意与 list.pop(索引) 的语义区别。"
+    ],
+    "code": "d = {\"a\": 1, \"b\": 2}\nx = d.pop(\"a\")\nprint(x)\nprint(d)\nprint(d.pop(\"z\", \"无此键\"))",
+    "output": "1\n{'b': 2}\n无此键",
+    "steps": [
+      "键 a 存在：删除 a 并返回值 1。",
+      "原字典只剩 b 对应 2。",
+      "键 z 不存在：返回默认字符串，不报错。"
+    ],
+    "before": {
+      "cells": [
+        "a → 1",
+        "b → 2"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "b → 2"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "diagram_note": "按键删除，而不是按插入位置删除。",
+    "related": [
+      "dict.get",
+      "dict.popitem",
+      "list.pop"
+    ],
+    "label": "按键删除字典中的一项"
+  },
+  {
+    "id": "dict.update",
+    "cat": "dict",
+    "name": "update",
+    "sig": "d.update(other, **kwargs)",
+    "desc": "批量新增键值对或覆盖已有键对应的值。",
+    "params": [
+      {
+        "name": "other",
+        "type": "映射或二元组可迭代对象，可选",
+        "desc": "例如 {\"a\": 2} 或 [(\"a\", 2)]。"
+      },
+      {
+        "name": "**kwargs",
+        "type": "关键字参数，可选",
+        "desc": "例如 d.update(city=\"Yibin\")，键名作为字符串。"
+      }
+    ],
+    "ret": "None",
+    "cost": "O(k)，k 为输入的键值对数（均摊）",
+    "why": "需逐项执行哈希写入，散列表偶尔扩容。",
+    "mutate": "是。",
+    "pitfalls": [
+      "同名键会静默覆盖旧值。",
+      "update([(\"x\",1)]) 合法；不是所有可迭代对象都可用，元素必须能表示键值对。"
+    ],
+    "code": "d = {\"a\": 1}\nd.update({\"a\": 9, \"b\": 2})\nprint(d)",
+    "output": "{'a': 9, 'b': 2}",
+    "steps": [
+      "输入有两个键值对：a→9 与 b→2。",
+      "a 已存在，原值 1 被覆盖。",
+      "b 不存在，新增键值对。"
+    ],
+    "before": {
+      "cells": [
+        "a → 1"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "a → 9",
+        "b → 2"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "diagram_note": "键 a 的值被替换，键 b 被新增。",
+    "related": [
+      "dict.setdefault"
+    ],
+    "label": "批量新增键值对或覆盖已有键对应的值。"
+  },
+  {
+    "id": "dict.setdefault",
+    "cat": "dict",
+    "name": "setdefault",
+    "sig": "d.setdefault(key, default=None)",
+    "desc": "键存在时直接取原值；不存在时插入默认值并返回。",
+    "params": [
+      {
+        "name": "key",
+        "type": "可哈希对象",
+        "desc": "查找或插入的键。"
+      },
+      {
+        "name": "default",
+        "type": "任意对象；默认 None",
+        "desc": "只有键不存在时才作为新值插入。"
+      }
+    ],
+    "ret": "现有值；否则为新插入的默认值",
+    "cost": "平均 O(1)",
+    "why": "哈希查找，必要时进行插入。",
+    "mutate": "可能修改：只在键缺失时插入。",
+    "pitfalls": [
+      "与 get 的根本区别是会在字典里添加缺失的键。",
+      "default 表达式会在调用前求值，即便键已存在；可变默认对象共享问题需注意。"
+    ],
+    "code": "d = {\"a\": 1}\nprint(d.setdefault(\"a\", 9))\nprint(d.setdefault(\"b\", 2))\nprint(d)",
+    "output": "1\n2\n{'a': 1, 'b': 2}",
+    "steps": [
+      "键 a 已存在，直接返回 1，不会覆盖为 9。",
+      "键 b 不存在，插入 b→2。",
+      "第二次返回的是新插入的 2。"
+    ],
+    "before": {
+      "cells": [
+        "a → 1"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "a → 1",
+        "b → 2"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "diagram_note": "读取已有 a，插入缺失 b。",
+    "related": [
+      "dict.get",
+      "dict.update"
+    ],
+    "label": "键存在时直接取原值；不存在时插入默认值并返回。"
+  },
+  {
+    "id": "dict.popitem",
+    "cat": "dict",
+    "name": "popitem",
+    "sig": "d.popitem()",
+    "desc": "删除并返回最后插入的键值对（Python 3.7+ 保证后进先出）。",
+    "params": [],
+    "ret": "(key, value) 二元组",
+    "cost": "平均 O(1)",
+    "why": "在保持插入顺序的字典中移除末项。",
+    "mutate": "是。",
+    "pitfalls": [
+      "空字典会抛 KeyError。",
+      "修改已有键的值通常不会让它变成“最后插入”的键。"
+    ],
+    "code": "d = {\"a\": 1, \"b\": 2}\nitem = d.popitem()\nprint(item)\nprint(d)",
+    "output": "('b', 2)\n{'a': 1}",
+    "steps": [
+      "a 先插入、b 后插入。",
+      "popitem() 删除最后插入的 b。",
+      "返回 (\"b\", 2)，字典只剩 a。"
+    ],
+    "before": {
+      "cells": [
+        "a → 1",
+        "b → 2"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "a → 1"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "diagram_note": "箭头前后可见最后插入的 b 消失。",
+    "related": [
+      "dict.pop"
+    ],
+    "label": "删除并返回最后插入的键值对（Python 3.7+ 保证后进先出）。"
+  },
+  {
+    "id": "dict.clear",
+    "cat": "dict",
+    "name": "clear",
+    "sig": "d.clear()",
+    "desc": "原地移除全部键值对。",
+    "params": [],
+    "ret": "None",
+    "cost": "O(n)",
+    "why": "须清除每个键和值的引用并处理存储。",
+    "mutate": "是。",
+    "pitfalls": [
+      "所有指向同一字典对象的变量都会看到空字典。",
+      "别混淆 d.clear() 与把 d 重新赋值为 {}。"
+    ],
+    "code": "d = {\"a\": 1}\nalias = d\nd.clear()\nprint(d)\nprint(alias)",
+    "output": "{}\n{}",
+    "steps": [
+      "alias 和 d 指向同一个字典。",
+      "clear() 清空这一对象。",
+      "两个变量均显示 {}。"
+    ],
+    "before": {
+      "cells": [
+        "a → 1"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [],
+      "kind": "dict",
+      "heading": ""
+    },
+    "diagram_note": "不是创建新字典，而是把同一个字典清空。",
+    "related": [
+      "list.clear",
+      "dict.copy"
+    ],
+    "label": "原地移除全部键值对。"
+  },
+  {
+    "id": "dict.copy",
+    "cat": "dict",
+    "name": "copy",
+    "sig": "other = d.copy()",
+    "desc": "浅拷贝字典：外层键值结构独立，内部可变对象共享。",
+    "params": [],
+    "ret": "新字典对象",
+    "cost": "O(n)",
+    "why": "复制键值槽与引用。",
+    "mutate": "否：d 不直接改变。",
+    "pitfalls": [
+      "copy() 不会递归复制值中的列表、字典。",
+      "复制后重新赋值 other[\"x\"] 不影响 d，但修改共享子列表会影响 d。"
+    ],
+    "code": "d = {\"scores\": [80]}\nother = d.copy()\nother[\"scores\"].append(90)\nprint(d)\nprint(other)",
+    "output": "{'scores': [80, 90]}\n{'scores': [80, 90]}",
+    "steps": [
+      "创建新的外层字典 other。",
+      "scores 对应的列表仍是共享的。",
+      "对这个共享列表追加 90，两个字典均可见。"
+    ],
+    "before": {
+      "cells": [
+        "scores → [80]"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "scores → [80, 90]"
+      ],
+      "kind": "dict",
+      "heading": ""
+    },
+    "diagram_note": "右侧画的是修改共享内层列表之后的结果。",
+    "related": [
+      "list.copy",
+      "set.copy"
+    ],
+    "label": "浅拷贝字典：外层键值结构独立"
+  },
+  {
+    "id": "tuple.index",
+    "cat": "tuple",
+    "name": "index",
+    "sig": "t.index(value, start=0, stop=len(t))",
+    "desc": "在元组的指定区间中返回目标值的首个索引。",
+    "params": [
+      {
+        "name": "value",
+        "type": "任意可比较对象",
+        "desc": "按 == 比较。"
+      },
+      {
+        "name": "start",
+        "type": "整数；默认 0",
+        "desc": "包含该位置。"
+      },
+      {
+        "name": "stop",
+        "type": "整数；默认元组长度",
+        "desc": "不包含该位置。"
+      }
+    ],
+    "ret": "整数索引",
+    "cost": "O(n)",
+    "why": "必须从左到右线性查找。",
+    "mutate": "否：元组不可变。",
+    "pitfalls": [
+      "找不到抛 ValueError。",
+      "index 是查找位置，不是查找所有位置。"
+    ],
+    "code": "t = (\"a\", \"b\", \"a\")\nprint(t.index(\"a\", 1))",
+    "output": "2",
+    "steps": [
+      "从元组索引 1 开始检查。",
+      "第 1 个元素 b 不匹配。",
+      "第 2 个元素 a 匹配，所以返回 2。"
+    ],
+    "before": {
+      "cells": [
+        "0:a",
+        "1:b",
+        "2:a"
+      ],
+      "kind": "tuple",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "2"
+      ],
+      "kind": "tokens",
+      "heading": "返回索引"
+    },
+    "diagram_note": "元组本体没有被修改。",
+    "related": [
+      "list.index",
+      "tuple.count"
+    ],
+    "label": "在元组的指定区间中返回目标值的首个索引。"
+  },
+  {
+    "id": "tuple.count",
+    "cat": "tuple",
+    "name": "count",
+    "sig": "t.count(value)",
+    "desc": "计算目标值在元组中出现的次数。",
+    "params": [
+      {
+        "name": "value",
+        "type": "任意可比较对象",
+        "desc": "使用 == 比较元素值。"
+      }
+    ],
+    "ret": "整数（次数）",
+    "cost": "O(n)",
+    "why": "扫描所有元素。",
+    "mutate": "否。",
+    "pitfalls": [
+      "True、1、1.0 之间的相等比较可能得到 True，因此不是严格类型计数。"
+    ],
+    "code": "t = (1, True, 2, 1.0)\nprint(t.count(1))",
+    "output": "3",
+    "steps": [
+      "每个元素依次与 1 比较。",
+      "1、True、1.0 都等于 1。",
+      "返回次数 3。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "True",
+        "2",
+        "1.0"
+      ],
+      "kind": "tuple",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "True",
+        "1.0"
+      ],
+      "kind": "tokens",
+      "heading": "匹配项"
+    },
+    "diagram_note": "“不可变”不影响元素之间的相等比较。",
+    "related": [
+      "list.count",
+      "tuple.index"
+    ],
+    "label": "计算目标值在元组中出现的次数。"
+  },
+  {
+    "id": "set.add",
+    "cat": "set",
+    "name": "add",
+    "sig": "s.add(item)",
+    "desc": "向集合中添加一个可哈希的元素，若已存在则不重复添加。",
+    "params": [
+      {
+        "name": "item",
+        "type": "可哈希对象",
+        "desc": "如整数、字符串、符合要求的元组；普通 list/dict/set 不可直接加入。"
+      }
+    ],
+    "ret": "None",
+    "cost": "平均 O(1)",
+    "why": "哈希定位和插入；冲突严重时变慢。",
+    "mutate": "可能修改：仅元素尚不存在时增加。",
+    "pitfalls": [
+      "不能 add([1,2])：普通列表不可哈希，抛 TypeError。",
+      "集合中的相等元素合并，如 1 与 True 通常视为相等。"
+    ],
+    "code": "s = {1, 2}\ns.add(3)\ns.add(2)\nprint(sorted(s))",
+    "output": "[1, 2, 3]",
+    "steps": [
+      "集合最初包含 1、2。",
+      "add(3) 新增一个元素。",
+      "add(2) 不会产生第二个 2。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "2"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "2",
+        "3"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "diagram_note": "集合没有位置顺序，图示位置只用于说明成员关系。",
+    "related": [
+      "set.update",
+      "list.append"
+    ],
+    "label": "向集合中添加一个可哈希的元素"
+  },
+  {
+    "id": "set.update",
+    "cat": "set",
+    "name": "update",
+    "sig": "s.update(*iterables)",
+    "desc": "遍历一个或多个可迭代对象，逐个把元素加入集合。",
+    "params": [
+      {
+        "name": "*iterables",
+        "type": "多个可迭代对象",
+        "desc": "如列表、集合、字符串；逐个取出其元素并加入。"
+      }
+    ],
+    "ret": "None",
+    "cost": "均摊 O(k)，k 为输入元素总数",
+    "why": "对每个输入元素执行哈希添加；重复元素仍需检查。",
+    "mutate": "可能修改。",
+    "pitfalls": [
+      "update(\"ab\") 会加入 \"a\" 和 \"b\" 两个字符。",
+      "与 dict.update 的“键值对更新”完全不同。"
+    ],
+    "code": "s = {1}\ns.update([1, 2], [3])\nprint(sorted(s))",
+    "output": "[1, 2, 3]",
+    "steps": [
+      "遍历 [1, 2]：1 已有，新增 2。",
+      "继续遍历 [3]：新增 3。",
+      "最终集合成员为 1、2、3。"
+    ],
+    "before": {
+      "cells": [
+        "1"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "2",
+        "3"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "diagram_note": "重复的 1 自动合并。",
+    "related": [
+      "set.add",
+      "dict.update"
+    ],
+    "label": "遍历一个或多个可迭代对象"
+  },
+  {
+    "id": "set.remove",
+    "cat": "set",
+    "name": "remove",
+    "sig": "s.remove(item)",
+    "desc": "从集合中删除指定成员；不存在时抛异常。",
+    "params": [
+      {
+        "name": "item",
+        "type": "待删除元素",
+        "desc": "按哈希及相等语义定位。"
+      }
+    ],
+    "ret": "None",
+    "cost": "平均 O(1)",
+    "why": "哈希查找删除目标成员。",
+    "mutate": "是：当元素存在时删除。",
+    "pitfalls": [
+      "目标不存在抛 KeyError。",
+      "若不确定元素是否存在且希望不报错，使用 discard。"
+    ],
+    "code": "s = {1, 2, 3}\ns.remove(2)\nprint(sorted(s))",
+    "output": "[1, 3]",
+    "steps": [
+      "查找并删除成员 2。",
+      "其他成员 1、3 保留。",
+      "sorted 仅用于让输出顺序稳定。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "2",
+        "3"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "3"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "diagram_note": "集合没有索引，remove(2) 表示删值 2。",
+    "related": [
+      "set.discard",
+      "list.remove"
+    ],
+    "label": "从集合中删除指定成员；不存在时抛异常。"
+  },
+  {
+    "id": "set.discard",
+    "cat": "set",
+    "name": "discard",
+    "sig": "s.discard(item)",
+    "desc": "如果目标存在就删除；不存在时不报错。",
+    "params": [
+      {
+        "name": "item",
+        "type": "待删除元素",
+        "desc": "如 2 或 \"hello\"。"
+      }
+    ],
+    "ret": "None",
+    "cost": "平均 O(1)",
+    "why": "哈希查询；存在时执行删除。",
+    "mutate": "可能修改。",
+    "pitfalls": [
+      "“安全删除”仅指目标缺失时不会抛 KeyError；传入不合适对象仍可能出错。"
+    ],
+    "code": "s = {1, 2}\ns.discard(9)\ns.discard(2)\nprint(sorted(s))",
+    "output": "[1]",
+    "steps": [
+      "9 不在集合中，不做任何修改。",
+      "2 存在，因此被删除。",
+      "剩下成员 1。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "2"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "diagram_note": "第一步未变化；第二步删除 2。",
+    "related": [
+      "set.remove"
+    ],
+    "label": "如果目标存在就删除；不存在时不报错。"
+  },
+  {
+    "id": "set.pop",
+    "cat": "set",
+    "name": "pop",
+    "sig": "s.pop()",
+    "desc": "移除并返回集合里的一个任意元素。",
+    "params": [],
+    "ret": "被删除的元素",
+    "cost": "平均 O(1)",
+    "why": "实现通过内部表寻找可用条目；不保证特定成员。",
+    "mutate": "是。",
+    "pitfalls": [
+      "任意元素≠统计意义上的随机抽样；不要依赖具体结果或顺序。",
+      "空集合 pop() 抛 KeyError。"
+    ],
+    "code": "s = {1, 2, 3}\nx = s.pop()\nprint(x in {1, 2, 3})\nprint(len(s))",
+    "output": "True\n2",
+    "steps": [
+      "pop() 返回集合中的某个成员；无法指定哪个。",
+      "被返回的值属于原始集合，因此判断为 True。",
+      "移除一个后长度为 2。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "2",
+        "3"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "剩余 2 个"
+      ],
+      "kind": "tokens",
+      "heading": "成员数量"
+    },
+    "diagram_note": "示意图只展示成员数减少；不能确定删除哪一个。",
+    "related": [
+      "set.discard",
+      "list.pop"
+    ],
+    "label": "移除并返回集合里的一个任意元素。"
+  },
+  {
+    "id": "set.union",
+    "cat": "set",
+    "name": "union",
+    "sig": "s.union(*others)",
+    "desc": "计算并集：保留任意输入中出现过的成员，返回新集合。",
+    "params": [
+      {
+        "name": "*others",
+        "type": "一个或多个可迭代对象",
+        "desc": "如 set、list；方法允许多种可迭代对象。"
+      }
+    ],
+    "ret": "新的 set 集合",
+    "cost": "常见两个集合 O(|A|+|B|)",
+    "why": "复制 A 并扫描 B 加入成员；多集合扩展为各输入规模总和。",
+    "mutate": "否。",
+    "pitfalls": [
+      "s.union([2,3]) 合法，但 s | [2,3] 不合法（运算符一般要求集合类操作数）。",
+      "并集返回新集合，除非赋值回原变量否则原集合不变。"
+    ],
+    "code": "a = {1, 2}\nb = {2, 3}\nc = a.union(b)\nprint(sorted(c))\nprint(sorted(a))",
+    "output": "[1, 2, 3]\n[1, 2]",
+    "steps": [
+      "先将 a 的成员复制到新集合。",
+      "把 b 中尚未出现的 3 加入。",
+      "c 是新集合，原 a 仍为 {1,2}。"
+    ],
+    "before": {
+      "cells": [
+        "A: 1, 2",
+        "B: 2, 3"
+      ],
+      "kind": "tokens",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "2",
+        "3"
+      ],
+      "kind": "set",
+      "heading": "A ∪ B"
+    },
+    "diagram_note": "并集 = 至少在一个集合中出现。",
+    "related": [
+      "set.intersection",
+      "set.difference"
+    ],
+    "label": "计算并集：保留任意输入中出现过的成员"
+  },
+  {
+    "id": "set.intersection",
+    "cat": "set",
+    "name": "intersection",
+    "sig": "s.intersection(*others)",
+    "desc": "计算交集：只保留同时存在于所有输入中的元素。",
+    "params": [
+      {
+        "name": "*others",
+        "type": "一个或多个可迭代对象",
+        "desc": "与当前集合求共同成员。"
+      }
+    ],
+    "ret": "新的 set 集合",
+    "cost": "两个 set 平均 O(min(|A|,|B|))",
+    "why": "对较小集合逐个成员检查；非 set 可迭代对象时复杂度取决于转换与长度。",
+    "mutate": "否。",
+    "pitfalls": [
+      "s.intersection([2,3]) 合法；s & [2,3] 通常抛 TypeError。",
+      "求交集之后原集合不会改变。"
+    ],
+    "code": "a = {1, 2}\nb = {2, 3}\nprint(sorted(a.intersection(b)))\nprint(sorted(a))",
+    "output": "[2]\n[1, 2]",
+    "steps": [
+      "比较 a 和 b。",
+      "只有元素 2 同时出现在两边。",
+      "返回 {2}，原 a 不变。"
+    ],
+    "before": {
+      "cells": [
+        "A: 1, 2",
+        "B: 2, 3"
+      ],
+      "kind": "tokens",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "2"
+      ],
+      "kind": "set",
+      "heading": "A ∩ B"
+    },
+    "diagram_note": "交集 = 两边都出现。",
+    "related": [
+      "set.union",
+      "set.difference"
+    ],
+    "label": "计算交集：只保留同时存在于所有输入中的元素。"
+  },
+  {
+    "id": "set.difference",
+    "cat": "set",
+    "name": "difference",
+    "sig": "s.difference(*others)",
+    "desc": "计算差集：保留当前集合中存在、其他输入中不存在的成员。",
+    "params": [
+      {
+        "name": "*others",
+        "type": "一个或多个可迭代对象",
+        "desc": "依次排除其中出现的成员。"
+      }
+    ],
+    "ret": "新的 set 集合",
+    "cost": "两个 set 常见 O(|A|)，非 set 输入另计",
+    "why": "典型 set-set 情形复制/扫描 A；实现与多输入和类型有关。",
+    "mutate": "否。",
+    "pitfalls": [
+      "A - B 与 B - A 通常不同；差集没有交换律。",
+      "difference([2]) 合法，但 A - [2] 不合法。"
+    ],
+    "code": "a = {1, 2, 3}\nb = {2, 4}\nprint(sorted(a.difference(b)))\nprint(sorted(b.difference(a)))",
+    "output": "[1, 3]\n[4]",
+    "steps": [
+      "A 独有的成员是 1、3。",
+      "B 独有的成员是 4。",
+      "两个方向结果不同。"
+    ],
+    "before": {
+      "cells": [
+        "A: 1, 2, 3",
+        "B: 2, 4"
+      ],
+      "kind": "tokens",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "3"
+      ],
+      "kind": "set",
+      "heading": "A − B"
+    },
+    "diagram_note": "A − B 只保留 A 中且不在 B 中的元素。",
+    "related": [
+      "set.intersection",
+      "set.symmetric_difference"
+    ],
+    "label": "计算差集：保留当前集合中存在、其他输入中不存在的成员。"
+  },
+  {
+    "id": "set.symmetric_difference",
+    "cat": "set",
+    "name": "symmetric_difference",
+    "sig": "s.symmetric_difference(other)",
+    "desc": "计算对称差集：仅出现于其中一个集合的成员。",
+    "params": [
+      {
+        "name": "other",
+        "type": "一个可迭代对象",
+        "desc": "与当前集合比较成员差异。"
+      }
+    ],
+    "ret": "新的 set 集合",
+    "cost": "两个 set 平均 O(|A|+|B|)",
+    "why": "复制一边并依据另一边的成员进行翻转/增删。",
+    "mutate": "否。",
+    "pitfalls": [
+      "等价于 (A-B) ∪ (B-A)，不等于普通差集。",
+      "方法仅接收一个 other，而非多个其他对象。"
+    ],
+    "code": "a = {1, 2, 3}\nb = {2, 4}\nprint(sorted(a.symmetric_difference(b)))",
+    "output": "[1, 3, 4]",
+    "steps": [
+      "成员 2 两边都有，因此被排除。",
+      "成员 1、3 只在 A 中，成员 4 只在 B 中。",
+      "结果为 1、3、4。"
+    ],
+    "before": {
+      "cells": [
+        "A: 1, 2, 3",
+        "B: 2, 4"
+      ],
+      "kind": "tokens",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "3",
+        "4"
+      ],
+      "kind": "set",
+      "heading": "A △ B"
+    },
+    "diagram_note": "对称差 = 两者独有元素的合并。",
+    "related": [
+      "set.difference",
+      "set.union"
+    ],
+    "label": "计算对称差集：仅出现于其中一个集合的成员。"
+  },
+  {
+    "id": "set.issubset",
+    "cat": "set",
+    "name": "issubset",
+    "sig": "s.issubset(other)",
+    "desc": "检查当前集合的所有元素是否都在 other 中。",
+    "params": [
+      {
+        "name": "other",
+        "type": "集合或可迭代对象",
+        "desc": "被判断是否包含当前集合的目标。"
+      }
+    ],
+    "ret": "bool（True/False）",
+    "cost": "两个 set 平均 O(|A|)，可提前失败",
+    "why": "逐个检查 A 的成员是否包含于 B；若 B 不是 set，还可能有构建成本。",
+    "mutate": "否。",
+    "pitfalls": [
+      "空集是任意集合的子集。",
+      "A <= B 允许相等；A < B 才是严格真子集。"
+    ],
+    "code": "a = {1, 2}\nb = {1, 2, 3}\nprint(a.issubset(b))\nprint(b.issubset(a))",
+    "output": "True\nFalse",
+    "steps": [
+      "检查 a 的每个成员：1、2 均在 b 中。",
+      "所以 a 是 b 的子集，返回 True。",
+      "反向检查 b 时，3 不在 a 中，返回 False。"
+    ],
+    "before": {
+      "cells": [
+        "A: 1, 2",
+        "B: 1, 2, 3"
+      ],
+      "kind": "tokens",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "True"
+      ],
+      "kind": "tokens",
+      "heading": "A ⊆ B ?"
+    },
+    "diagram_note": "小集合的全部成员都在大集合内。",
+    "related": [
+      "set.issuperset"
+    ],
+    "label": "检查当前集合的所有元素是否都在 other 中。"
+  },
+  {
+    "id": "set.issuperset",
+    "cat": "set",
+    "name": "issuperset",
+    "sig": "s.issuperset(other)",
+    "desc": "检查当前集合是否包含 other 中的所有成员。",
+    "params": [
+      {
+        "name": "other",
+        "type": "集合或可迭代对象",
+        "desc": "被检查是否全部落在当前集合中。"
+      }
+    ],
+    "ret": "bool（True/False）",
+    "cost": "两个 set 平均 O(|other|)，可提前失败",
+    "why": "遍历 other 的成员并在当前集合里做哈希查询。",
+    "mutate": "否。",
+    "pitfalls": [
+      "A >= B 允许两者相等；A > B 是严格真超集。",
+      "对于一般可迭代对象，实际成本还受输入遍历影响。"
+    ],
+    "code": "a = {1, 2, 3}\nb = {1, 2}\nprint(a.issuperset(b))\nprint(b.issuperset(a))",
+    "output": "True\nFalse",
+    "steps": [
+      "确认 b 的 1、2 都包含在 a 里。",
+      "a 是 b 的超集，返回 True。",
+      "b 缺少 3，因此反向返回 False。"
+    ],
+    "before": {
+      "cells": [
+        "A: 1, 2, 3",
+        "B: 1, 2"
+      ],
+      "kind": "tokens",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "True"
+      ],
+      "kind": "tokens",
+      "heading": "A ⊇ B ?"
+    },
+    "diagram_note": "大集合包含小集合全部成员。",
+    "related": [
+      "set.issubset"
+    ],
+    "label": "检查当前集合是否包含 other 中的所有成员。"
+  },
+  {
+    "id": "set.clear",
+    "cat": "set",
+    "name": "clear",
+    "sig": "s.clear()",
+    "desc": "清空整个集合，保留原集合对象。",
+    "params": [],
+    "ret": "None",
+    "cost": "O(n)",
+    "why": "解除每个成员引用并清除内部表。",
+    "mutate": "是。",
+    "pitfalls": [
+      "若多个变量引用同一个集合，clear 会影响所有别名。",
+      "空集合是 set()，{} 则是空字典。"
+    ],
+    "code": "s = {1, 2}\nalias = s\ns.clear()\nprint(s)\nprint(alias)",
+    "output": "set()\nset()",
+    "steps": [
+      "alias 和 s 共享同一集合对象。",
+      "clear() 使集合变空。",
+      "两者打印结果都为 set()。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "2"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "after": {
+      "cells": [],
+      "kind": "set",
+      "heading": ""
+    },
+    "diagram_note": "空集合在 Python 中显示为 set()，并不是 {}。",
+    "related": [
+      "set.copy",
+      "list.clear"
+    ],
+    "label": "清空整个集合"
+  },
+  {
+    "id": "set.copy",
+    "cat": "set",
+    "name": "copy",
+    "sig": "t = s.copy()",
+    "desc": "浅拷贝集合，返回具有相同成员的新集合。",
+    "params": [],
+    "ret": "新的 set 集合",
+    "cost": "O(n)",
+    "why": "须把原集合的成员引用复制进新哈希表。",
+    "mutate": "否。",
+    "pitfalls": [
+      "set 的成员必须可哈希；通常不会直接包含普通 list/dict。",
+      "若成员是“可哈希但内部可变”的自定义对象，浅拷贝也不会复制它。"
+    ],
+    "code": "s = {1, 2}\nt = s.copy()\nt.add(3)\nprint(sorted(s))\nprint(sorted(t))\nprint(s is t)",
+    "output": "[1, 2]\n[1, 2, 3]\nFalse",
+    "steps": [
+      "t 是独立的新集合对象。",
+      "修改 t 新增 3 不影响 s。",
+      "s is t 返回 False。"
+    ],
+    "before": {
+      "cells": [
+        "1",
+        "2"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "after": {
+      "cells": [
+        "1",
+        "2",
+        "3"
+      ],
+      "kind": "set",
+      "heading": ""
+    },
+    "diagram_note": "右侧代表对拷贝 t 再调用 add(3)；原集合 s 仍只有 1、2。",
+    "related": [
+      "set.add",
+      "list.copy"
+    ],
+    "label": "浅拷贝集合"
+  }
+]
